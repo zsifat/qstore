@@ -59,6 +59,12 @@ class AppTextStyles {
         color: AppColors.neutralGrey937,
       );
 
+  static TextStyle get t14b600_937 => getTextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: AppColors.neutralGrey937,
+  );
+
   static TextStyle get t16b400_000 => getTextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w400,
