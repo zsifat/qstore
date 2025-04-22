@@ -12,15 +12,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'QStore',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-        useMaterial3: true,
-      ),
-      home:HomeScreen()
-    );
+    return MultiBlocProvider(
+        providers: BlocProviders.getProviders(),
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'QStore',
+            theme: ThemeData(
+              scaffoldBackgroundColor: Colors.white,
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+              useMaterial3: true,
+            ),
+            home:HomeScreen()
+        ));
   }
 }
