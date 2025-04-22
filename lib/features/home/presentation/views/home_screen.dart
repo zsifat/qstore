@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:qstore/core/constants/app_constants.dart';
 import 'package:qstore/core/utils/helper_methods.dart';
-import 'package:qstore/features/home/presentation/bloc/product_bloc.dart';
-import 'package:qstore/features/home/presentation/bloc/product_state.dart';
+import 'package:qstore/features/home/presentation/bloc/product_bloc/product_bloc.dart';
+import 'package:qstore/features/home/presentation/bloc/product_bloc/product_state.dart';
 import 'package:qstore/features/home/presentation/widgets/custom_widgets.dart';
 
-import '../bloc/product_event.dart';
+import '../bloc/product_bloc/product_event.dart';
 import '../widgets/lottie_display.dart';
 import '../widgets/product_container.dart';
 import '../widgets/search_text_field.dart';
@@ -113,6 +113,12 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       shape: const OutlineInputBorder(borderRadius: BorderRadius.zero),
       builder: (context) => const FilterSheet(),
-    );
+    ).then((value) {
+      _scrollController.animateTo(
+        0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    },);
   }
 }

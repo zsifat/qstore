@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qstore/features/home/data/model/product_model.dart';
-import '../../data/repository_implementations/product_repository_implementation.dart';
+import '../../../data/repository_implementations/product_repository_implementation.dart';
 import 'product_event.dart';
 import 'product_state.dart';
 
@@ -9,13 +9,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   final List<ProductModel> _allProducts = [];
   int _skip = 0;
-  final int _limit = 20;
+  final int _limit = 50;
   bool _isFetching = false;
   bool _hasMore = true;
+
+  SortOption? _currentSortOption;
 
   ProductBloc(this.productRepository) : super(ProductInitial()) {
     on<FetchProducts>(_onFetchProducts);
     on<FetchSearchedProducts>(_onFetchSearchedProducts);
+    on<SortProducts>(_onSortProducts);
+    on<ClearSort>(_onClearSort);
   }
 
   Future<void> _onFetchProducts(FetchProducts event, Emitter<ProductState> emit) async {
@@ -36,17 +40,19 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
       _hasMore = productsResponse.total > _allProducts.length;
 
-      emit(
-        ProductLoaded(
+      if (_currentSortOption != null) {
+        add(SortProducts(_currentSortOption!)); // 👉 Trigger sorting after new data fetched
+      } else {
+        emit(ProductLoaded(
           ProductResponse(
             products: _allProducts,
-            limit: productsResponse.limit,
-            skip: productsResponse.skip,
-            total: productsResponse.total,
+            limit: _limit,
+            skip: _skip,
+            total: _allProducts.length,
           ),
           hasMore: _hasMore,
-        ),
-      );
+        ));
+      }
     } catch (error) {
       emit(ProductError(error.toString()));
     } finally {
@@ -72,5 +78,43 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     _skip = 0;
     _allProducts.clear();
     _hasMore = true;
+  }
+
+  void _onSortProducts(SortProducts event, Emitter<ProductState> emit) {
+    _currentSortOption = event.sortOption;  // 🆕 Remember sort option
+    _emitSortedProducts(emit);
+  }
+
+  void _emitSortedProducts(Emitter<ProductState> emit) {
+    List<ProductModel> sortedProducts = List.from(_allProducts);
+
+    if (_currentSortOption != null) {
+      switch (_currentSortOption!) {
+        case SortOption.priceLowToHigh:
+          sortedProducts.sort((a, b) => a.price.compareTo(b.price));
+          break;
+        case SortOption.priceHighToLow:
+          sortedProducts.sort((a, b) => b.price.compareTo(a.price));
+          break;
+        case SortOption.ratingHighToLow:
+          sortedProducts.sort((a, b) => b.rating.compareTo(a.rating));
+          break;
+      }
+    }
+
+    emit(ProductLoaded(
+      ProductResponse(
+        products: sortedProducts,
+        limit: _limit,
+        skip: _skip,
+        total: sortedProducts.length,
+      ),
+      hasMore: _hasMore,
+    ));
+  }
+
+  void _onClearSort(ClearSort event, Emitter<ProductState> emit) {
+    _currentSortOption = null;
+    add(FetchProducts(isRefresh: true));
   }
 }

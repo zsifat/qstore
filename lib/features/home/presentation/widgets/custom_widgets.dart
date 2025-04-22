@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:qstore/core/constants/app_constants.dart';
 import 'package:qstore/core/theme/app_textstyles.dart';
+
+import '../bloc/product_bloc/product_bloc.dart';
+import '../bloc/product_bloc/product_event.dart';
 
 
 class FilterSheet extends StatelessWidget {
@@ -24,6 +28,7 @@ class FilterSheet extends StatelessWidget {
               Text('Sort By', style: AppTextStyles.t16b600_937),
               GestureDetector(
                   onTap: () {
+                    context.read<ProductBloc>().add(ClearSort());
                     Navigator.pop(context);
                   },
                   child: SvgPicture.asset(AppConstants.crossIcon))
@@ -37,7 +42,7 @@ class FilterSheet extends StatelessWidget {
               style: AppTextStyles.t14b400_937,
             ),
             onTap: () {
-              // Handle Low to High action here
+              context.read<ProductBloc>().add(SortProducts(SortOption.priceLowToHigh));
               Navigator.pop(context);
             },
           ),
@@ -48,7 +53,7 @@ class FilterSheet extends StatelessWidget {
               style: AppTextStyles.t14b400_937,
             ),
             onTap: () {
-              // Handle High to Low action here
+              context.read<ProductBloc>().add(SortProducts(SortOption.priceHighToLow));
               Navigator.pop(context);
             },
           ),
@@ -59,7 +64,7 @@ class FilterSheet extends StatelessWidget {
               style: AppTextStyles.t14b400_937,
             ),
             onTap: () {
-              // Handle Rating action here
+              context.read<ProductBloc>().add(SortProducts(SortOption.ratingHighToLow));
               Navigator.pop(context);
             },
           ),

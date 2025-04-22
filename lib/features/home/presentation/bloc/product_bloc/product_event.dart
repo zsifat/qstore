@@ -20,3 +20,12 @@ class FetchSearchedProducts extends ProductEvent {
   @override
   List<Object> get props => [query];
 }
+
+enum SortOption { priceLowToHigh, priceHighToLow, ratingHighToLow }
+
+class SortProducts extends ProductEvent {
+  final SortOption sortOption;
+  SortProducts(this.sortOption);
+}
+
+class ClearSort extends ProductEvent {}

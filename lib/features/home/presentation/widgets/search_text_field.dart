@@ -7,8 +7,8 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_textstyles.dart';
-import '../bloc/product_bloc.dart';
-import '../bloc/product_event.dart';
+import '../bloc/product_bloc/product_bloc.dart';
+import '../bloc/product_bloc/product_event.dart';
 
 class SearchTextField extends StatefulWidget {
   final Function(String)? onChanged;
