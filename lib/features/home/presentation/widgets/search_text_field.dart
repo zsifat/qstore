@@ -27,53 +27,34 @@ class SearchTextField extends StatefulWidget {
 
 class _SearchTextFieldState extends State<SearchTextField> {
   final TextEditingController _controller = TextEditingController();
-  bool _hasText = false;
-  Timer? _debounce;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.addListener(_onTextChanged);
-  }
 
   @override
   void dispose() {
-    _controller.removeListener(_onTextChanged);
-    _debounce?.cancel();
+    _controller.dispose();
     super.dispose();
-  }
-
-  void _onTextChanged() {
-    if(_controller.text.isNotEmpty){
-      if (_debounce?.isActive ?? false) _debounce?.cancel();
-      _debounce = Timer(const Duration(milliseconds: 800), () {
-        if (widget.onChanged != null && _controller.text.isNotEmpty) {
-          widget.onChanged!(_controller.text);
-        }
-      });
-
-      setState(() {
-        _hasText = _controller.text.isNotEmpty;
-      });
-    }else{
-      _clearText();
-    }
   }
 
   void _clearText() {
     _controller.clear();
     context.read<ProductBloc>().add(FetchProducts(isRefresh: true));
-    setState(() {
-      _hasText = false;
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       focusNode: widget.focusNode,
+      textInputAction: TextInputAction.search,
       controller: _controller,
       style: AppTextStyles.t16b400_000,
+      onChanged: (value) {
+        setState(() {});
+      },
+      onSubmitted: (value) {
+        if(value.isNotEmpty){
+          widget.onChanged?.call(value.trim());
+        }
+      },
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 16),
         prefixIcon: Padding(
@@ -81,7 +62,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
           child: SvgPicture.asset(AppConstants.searchIcon),
         ),
         prefixIconConstraints: BoxConstraints(maxHeight: 24, maxWidth: 66),
-        suffixIcon: _hasText
+        suffixIcon: _controller.text.isNotEmpty
             ? GestureDetector(
           onTap: _clearText,
           child: Padding(

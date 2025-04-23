@@ -19,6 +19,7 @@ class NetworkConnectivityBloc extends Bloc<NetworkConnectivityEvent, NetworkConn
     });
 
     _subscription = _connectivity.onConnectivityChanged.listen((result) async {
+      print(result);
       bool hasInternet = await NetworkChecker().hasConnection;
       add(NetworkStatusChanged(hasInternet));
     });

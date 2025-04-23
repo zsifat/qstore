@@ -67,7 +67,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       try {
         final searchResponse = await productRepository.getSearchedProducts(event.query);
 
-        emit(ProductLoaded(searchResponse));
+        emit(ProductLoaded(searchResponse,isSearch: true));
       } catch (error) {
         emit(ProductError(error.toString()));
       }

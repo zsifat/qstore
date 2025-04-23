@@ -16,8 +16,9 @@ class MoreProductLoading extends ProductState {}
 class ProductLoaded extends ProductState {
   final ProductResponse productResponse;
   final bool hasMore;
+  final bool isSearch;
 
-  ProductLoaded(this.productResponse, {this.hasMore = true});
+  ProductLoaded(this.productResponse, {this.hasMore = true, this.isSearch = false});
 
   @override
   List<Object> get props => [productResponse, hasMore];

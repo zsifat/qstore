@@ -8,7 +8,7 @@ class ShimmerGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: GridView.builder(
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.symmetric(horizontal: 16),
         itemCount: 10,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

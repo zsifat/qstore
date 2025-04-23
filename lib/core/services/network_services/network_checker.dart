@@ -25,12 +25,8 @@ class NetworkChecker {
 
   Future<bool> _isConnectedToInternet() async {
     try {
-      final response = await ApiClient.instance.get('https://www.google.com');
-      if (response.statusCode == 200) {
-        return true;
-      } else{
-        return false;
-      }
+      final response = await ApiClient.instance.get('https://example.com');
+      return true;
     } catch (e) {
       print("Error checking internet connection: $e");
       return false;
