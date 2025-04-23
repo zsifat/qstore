@@ -37,6 +37,7 @@ class _SearchTextFieldState extends State<SearchTextField> {
   void _clearText() {
     _controller.clear();
     context.read<ProductBloc>().add(FetchProducts(isRefresh: true));
+    FocusScope.of(context).unfocus();
     setState(() {});
   }
 
@@ -49,10 +50,15 @@ class _SearchTextFieldState extends State<SearchTextField> {
       style: AppTextStyles.t16b400_000,
       onChanged: (value) {
         setState(() {});
+        if(value.isEmpty){
+          _clearText();
+        }
       },
       onSubmitted: (value) {
         if(value.isNotEmpty){
           widget.onChanged?.call(value.trim());
+        }else{
+          context.read<ProductBloc>().add(FetchProducts(isRefresh: true));
         }
       },
       decoration: InputDecoration(
@@ -64,8 +70,13 @@ class _SearchTextFieldState extends State<SearchTextField> {
         prefixIconConstraints: BoxConstraints(maxHeight: 24, maxWidth: 66),
         suffixIcon: _controller.text.isNotEmpty
             ? GestureDetector(
-          onTap: _clearText,
-          child: Padding(
+            onTap: () {
+              _controller.clear();
+              context.read<ProductBloc>().add(FetchProducts(isRefresh: true));
+              FocusScope.of(context).unfocus();
+              setState(() {});
+            },
+            child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SvgPicture.asset(AppConstants.crossIcon),
           ),

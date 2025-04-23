@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:qstore/core/constants/app_constants.dart';
 import 'package:qstore/core/theme/app_textstyles.dart';
 

@@ -6,6 +6,7 @@ import 'package:qstore/core/theme/app_colors.dart';
 import 'package:qstore/core/theme/app_textstyles.dart';
 import 'package:qstore/core/utils/helper_methods.dart';
 import 'package:qstore/features/home/data/model/product_model.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProductContainer extends StatefulWidget {
   final ProductModel productModel;
@@ -54,7 +55,7 @@ class _ProductContainerState extends State<ProductContainer> {
     );
   }
 
-  // Build product image section
+
   Widget _buildImageSection(ProductModel product) {
     return Expanded(
       child: ClipRRect(
@@ -67,6 +68,14 @@ class _ProductContainerState extends State<ProductContainer> {
               width: double.infinity,
               height: 150,
               fit: BoxFit.cover,
+              placeholder: (context, url) {
+                return Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300, highlightColor: Colors.grey.shade100,
+                    child: Container(
+                  height: 150,
+                  color: Colors.white,
+                ));
+              },
             ),
             _buildFavouriteIcon(),
             if (product.availabilityStatus == 'Out of Stock')
@@ -77,7 +86,7 @@ class _ProductContainerState extends State<ProductContainer> {
     );
   }
 
-  // Build the favourite icon button
+
   Widget _buildFavouriteIcon() {
     return Positioned(
       top: 10,
@@ -93,7 +102,7 @@ class _ProductContainerState extends State<ProductContainer> {
     );
   }
 
-  // Build out of stock label
+
   Widget _buildOutOfStockLabel(ProductModel product) {
     return Positioned(
       top: 4,
@@ -126,19 +135,26 @@ class _ProductContainerState extends State<ProductContainer> {
   Widget _buildPriceRow(ProductModel product) {
     return Row(
       children: [
-        Text(
-          '\$${product.price.toStringAsFixed(2)}',
-          style: AppTextStyles.t14b600_937,
+        Expanded(
+          child: Text(
+            '\$${product.price.toStringAsFixed(2)}',
+            style: AppTextStyles.t14b600_937,
+          ),
         ),
         const SizedBox(width: 4),
-        Text(
-          '\$${HelperMethods.calculateOriginalPrice(product.price, product.discountPercentage).toStringAsFixed(2)}',
-          style: AppTextStyles.t10b500_3AF.copyWith(decoration: TextDecoration.lineThrough),
+        Expanded(
+          child: Text(
+            '\$${HelperMethods.calculateOriginalPrice(product.price, product.discountPercentage).toStringAsFixed(2)}',
+            style: AppTextStyles.t10b500_3AF.copyWith(decoration: TextDecoration.lineThrough),
+          ),
         ),
         const SizedBox(width: 4),
-        Text(
-          '${product.discountPercentage.round()}% OFF',
-          style: AppTextStyles.t10b500_80C,
+        Expanded(
+          child: Text(
+            '${product.discountPercentage.round()}% OFF',
+            style: AppTextStyles.t10b500_80C,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );

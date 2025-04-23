@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:qstore/core/constants/app_constants.dart';
-import 'package:qstore/core/theme/app_colors.dart';
-import 'package:qstore/core/theme/app_textstyles.dart';
-import 'package:qstore/core/utils/helper_methods.dart';
 import 'package:qstore/features/home/presentation/bloc/network_bloc/network_connectivity_bloc.dart';
 import 'package:qstore/features/home/presentation/bloc/network_bloc/network_connectivity_state.dart';
 import 'package:qstore/features/home/presentation/bloc/product_bloc/product_bloc.dart';
 import 'package:qstore/features/home/presentation/bloc/product_bloc/product_state.dart';
-import 'package:qstore/features/home/presentation/widgets/custom_widgets.dart';
-
 import '../bloc/product_bloc/product_event.dart';
-import '../widgets/lottie_display.dart';
-import '../widgets/product_container.dart';
-import '../widgets/search_text_field.dart';
-import '../widgets/shimmer.dart';
+import '../widgets/product_grid_section.dart';
+import '../widgets/search_sort_section.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,7 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<ProductBloc>().add(FetchProducts(isRefresh: true));
     _scrollController.addListener(() {
       _focusNode.unfocus();
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      final productState = context.read<ProductBloc>().state;
+      if (productState is! ProductLoaded || !productState.isSearch) {
         context.read<ProductBloc>().add(FetchProducts());
       }
     });
@@ -53,98 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: HelperMethods.statusBarHeight, bottom: 16,left: 16,right: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SearchTextField(
-                        focusNode: _focusNode,
-                        onChanged: (p0) {
-                          context.read<ProductBloc>().add(FetchSearchedProducts(p0));
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          _focusNode.unfocus();
-                          _showFilterModal(context);
-                        },
-                        child: SvgPicture.asset(
-                          AppConstants.filterIcon,
-                          width: 48,
-                        ))
-                  ],
-                ),
-              ),
-              BlocBuilder<ProductBloc, ProductState>(
-                builder: (context, state) {
-                  if (state is ProductLoading) {
-                    return ShimmerGridView();
-                  } else if (state is ProductLoaded) {
-                    if (state.productResponse.products.isNotEmpty) {
-                      return Expanded(
-                        child: Column(
-                          children: [
-                            if(state.isSearch)
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.neutralGreyAFB
-                              ) ,
-                              height: 34,
-                              width: double.infinity,
-                              child: Center(child: Text('${state.productResponse.products.length} Items',style: AppTextStyles.t12b500_937,)),
-                            ),
-                            Expanded(
-                              child: GridView.builder(
-                                controller: _scrollController,
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                itemCount: state.productResponse.products.length,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.65,
-                                  mainAxisSpacing: 24,
-                                  crossAxisSpacing: 16,
-                                ),
-                                itemBuilder: (context, index) {
-                                  return ProductContainer(
-                                    productModel: state.productResponse.products[index],
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Expanded(
-                          child: LottieDisplay(
-                              animationPath: AppConstants.noItemLottie,
-                              message: 'No Items Found'));
-                    }
-                  }
-                  return SizedBox.shrink();
-                },
-              ),
+              SearchAndSortSection(scrollController: _scrollController, focusNode: _focusNode),
+              ProductGridSection(scrollController: _scrollController),
             ],
           ),
         ));
   }
 
-  void _showFilterModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const OutlineInputBorder(borderRadius: BorderRadius.zero),
-      builder: (context) => const FilterSheet(),
-    ).then((value) {
-      _scrollController.animateTo(
-        0,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    },);
-  }
 }

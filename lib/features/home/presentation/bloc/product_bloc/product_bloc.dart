@@ -23,7 +23,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   Future<void> _onFetchProducts(FetchProducts event, Emitter<ProductState> emit) async {
-    if (_isFetching || !_hasMore) return;
+    if ((_isFetching || !_hasMore) && !event.isRefresh) return;
 
     if (event.isRefresh) {
       emit(ProductLoading());
