@@ -17,7 +17,7 @@ class SearchAndSortSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: HelperMethods.statusBarHeight, bottom: 16,left: 16,right: 16),
+      padding: EdgeInsets.only(top: 50, bottom: 16,left: 16,right: 16),
       child: Row(
         children: [
           Expanded(
