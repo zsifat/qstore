@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:qstore/core/theme/app_colors.dart';
 import 'package:qstore/features/home/presentation/bloc/network_bloc/network_connectivity_bloc.dart';
 import 'package:qstore/features/home/presentation/bloc/network_bloc/network_connectivity_state.dart';
 import 'package:qstore/features/home/presentation/bloc/product_bloc/product_bloc.dart';
@@ -30,9 +28,17 @@ class _HomeScreenState extends State<HomeScreen> {
       _focusNode.unfocus();
       final productState = context.read<ProductBloc>().state;
       if (productState is! ProductLoaded || !productState.isSearch) {
-        context.read<ProductBloc>().add(FetchProducts());
+        if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent-200 &&
+            !_scrollController.position.outOfRange) {
+          if (productState is ProductLoaded && !productState.hasMore) {
+            showEndOfProductPageSnackbar(context);
+          } else {
+            context.read<ProductBloc>().add(FetchProducts());
+          }
+        }
       }
     });
+
   }
 
   @override

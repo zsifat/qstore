@@ -47,6 +47,12 @@ class _ProductContainerState extends State<ProductContainer> {
           const SizedBox(height: 8),
           _buildProductTitle(product),
           const SizedBox(height: 8),
+          if(product.price>=100)
+          Text(
+            '${product.discountPercentage.round()}% OFF',
+            style: AppTextStyles.t10b500_80C,
+            overflow: TextOverflow.ellipsis,
+          ),
           _buildPriceRow(product),
           const SizedBox(height: 8),
           _buildRatingRow(product),
@@ -138,27 +144,22 @@ class _ProductContainerState extends State<ProductContainer> {
   Widget _buildPriceRow(ProductModel product) {
     return Row(
       children: [
-        Expanded(
-          child: Text(
-            '\$${product.price.toStringAsFixed(2)}',
-            style: AppTextStyles.t14b600_937,
-          ),
+        Text(
+          '\$${product.price.toStringAsFixed(2)}',
+          style: AppTextStyles.t14b600_937,
         ),
         const SizedBox(width: 4),
-        Expanded(
-          child: Text(
-            '\$${HelperMethods.calculateOriginalPrice(product.price, product.discountPercentage).toStringAsFixed(2)}',
-            style: AppTextStyles.t10b500_3AF.copyWith(decoration: TextDecoration.lineThrough),
-          ),
+        Text(
+          '\$${HelperMethods.calculateOriginalPrice(product.price, product.discountPercentage).toStringAsFixed(2)}',
+          style: AppTextStyles.t10b500_3AF.copyWith(decoration: TextDecoration.lineThrough),
         ),
-        const SizedBox(width: 4),
-        Expanded(
-          child: Text(
+        const SizedBox(width: 6),
+        if(product.price<100)
+          Text(
             '${product.discountPercentage.round()}% OFF',
             style: AppTextStyles.t10b500_80C,
             overflow: TextOverflow.ellipsis,
           ),
-        ),
       ],
     );
   }

@@ -73,3 +73,37 @@ void showNoInternetSnackbar(BuildContext context) {
 
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
+
+void showEndOfProductPageSnackbar(BuildContext context) {
+  final snackBar = SnackBar(
+    content: Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.info_outline, color: Colors.white),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              "You've reached the end of the product list.",
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: Colors.white,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    ),
+    backgroundColor: AppColors.neutralGrey280,
+    behavior: SnackBarBehavior.floating,
+    margin: const EdgeInsets.all(16),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    duration: const Duration(seconds: 3),
+  );
+
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}

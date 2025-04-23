@@ -10,7 +10,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   final List<ProductModel> _allProducts = [];
   int _skip = 0;
-  final int _limit = 50;
+  final int _limit = 20;
   bool _isFetching = false;
   bool _hasMore = true;
 
