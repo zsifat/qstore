@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qstore/features/home/data/model/product_model.dart';
-import '../../../data/repository_implementations/product_repository_implementation.dart';
+import 'package:qstore/features/home/data/repository_implementations/product_repository_implementation.dart';
+import '../../../data/data_sources/remote_product_datasource.dart';
 import 'product_event.dart';
 import 'product_state.dart';
 

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qstore/core/services/bloc_provider_service/bloc_providers.dart';
+import 'package:qstore/core/services/local_data_services/hive_service.dart';
 import 'package:qstore/features/home/presentation/views/home_screen.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await HiveService().initializeHive();
+
   runApp(const MyApp());
 }
 

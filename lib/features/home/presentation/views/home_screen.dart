@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:qstore/core/theme/app_colors.dart';
 import 'package:qstore/features/home/presentation/bloc/network_bloc/network_connectivity_bloc.dart';
 import 'package:qstore/features/home/presentation/bloc/network_bloc/network_connectivity_state.dart';
 import 'package:qstore/features/home/presentation/bloc/product_bloc/product_bloc.dart';
 import 'package:qstore/features/home/presentation/bloc/product_bloc/product_state.dart';
+import '../../../../core/shared/custom_widget.dart';
 import '../bloc/product_bloc/product_event.dart';
 import '../widgets/product_grid_section.dart';
 import '../widgets/search_sort_section.dart';
@@ -38,9 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
         body: BlocListener<NetworkConnectivityBloc,NetworkConnectivityState>(
           listener: (context, state) {
             if (state is NetworkDisconnected) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("You're offline")),
-              );
+              showNoInternetSnackbar(context);
+            }
+            if(state is NetworkConnected){
+              context.read<ProductBloc>().add(FetchProducts(isRefresh: true));
             }
           },
           child: Column(

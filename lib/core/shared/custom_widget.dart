@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:qstore/core/theme/app_textstyles.dart';
+
+import '../theme/app_colors.dart';
 
 class LottieDisplay extends StatelessWidget {
   final String animationPath;
@@ -44,4 +47,29 @@ class LottieDisplay extends StatelessWidget {
       ),
     );
   }
+}
+
+void showNoInternetSnackbar(BuildContext context) {
+  final snackBar = SnackBar(
+    content: Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.wifi_off, color: Colors.white),
+          SizedBox(width: 10),
+          Expanded(child: Text("No internet connection", style: GoogleFonts.inter(fontSize: 16,color: Colors.white))),
+        ],
+      ),
+    ),
+    backgroundColor: AppColors.warningOrange80C,
+    behavior: SnackBarBehavior.floating,
+    margin: const EdgeInsets.all(16),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    duration: const Duration(seconds: 3),
+  );
+
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }

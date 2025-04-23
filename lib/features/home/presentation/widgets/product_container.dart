@@ -76,6 +76,9 @@ class _ProductContainerState extends State<ProductContainer> {
                   color: Colors.white,
                 ));
               },
+              errorWidget: (context, url, error) {
+                return Icon(Icons.image_outlined);
+              },
             ),
             _buildFavouriteIcon(),
             if (product.availabilityStatus == 'Out of Stock')
